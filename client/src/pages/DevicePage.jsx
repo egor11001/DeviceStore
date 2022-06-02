@@ -1,6 +1,5 @@
 import React from 'react';
 import { Container, Col, Image, Row, Card, Button, Modal } from 'react-bootstrap';
-import bigStar from '../assets/bigStar.png';
 import { useParams } from 'react-router-dom';
 import { fetchOneDevices, setDeviceRating, updateBasket } from '../http/deviceAPI';
 
@@ -13,8 +12,14 @@ const DevicePage = () => {
     fetchOneDevices(id).then((data) => setDevice(data));
   }, []);
 
-  const upRating = (id) => {
-    setDeviceRating(id).then((data) => {
+  const AddRating = (id) => {
+    setDeviceRating({ id: id, value: 1 }).then((data) => {
+      fetchOneDevices(id).then((data) => setDevice(data));
+    });
+  };
+
+  const RemoveRating = (id) => {
+    setDeviceRating({ id: id, value: 0 }).then((data) => {
       fetchOneDevices(id).then((data) => setDevice(data));
     });
   };
@@ -36,18 +41,57 @@ const DevicePage = () => {
           <Row className="d-flex flex-column">
             <div>
               <h2>{device.name}</h2>
+
               <div
                 style={{
-                  background: `url(${bigStar}) no-repeat center center`,
-                  width: 240,
-                  height: 240,
-                  backgroundSize: 'cover',
-                  fontSize: 64,
-                  cursor: 'pointer',
-                }}
-                className="d-flex align-items-center justify-content-center"
-                onClick={() => upRating(id)}>
-                {device.rating}
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  marginTop: '80px',
+                }}>
+                <h3
+                  style={{
+                    fontSize: '24px',
+                  }}>
+                  Рейтинг
+                </h3>
+                <div
+                  style={{
+                    display: 'flex',
+                    marginTop: '16px',
+                  }}>
+                  <button
+                    style={{
+                      border: '1px solid #EEEEEE',
+                      background: 'none',
+                      display: 'flex',
+                      width: '40px',
+                      height: '40px',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '32px',
+                      marginRight: '16px',
+                    }}
+                    onClick={() => RemoveRating(id)}>
+                    -
+                  </button>
+                  <h4 style={{ alignSelf: 'center' }}>{device.rating}</h4>
+                  <button
+                    style={{
+                      border: '1px solid #EEEEEE',
+                      background: 'none',
+                      display: 'flex',
+                      width: '40px',
+                      height: '40px',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '32px',
+                      marginLeft: '16px',
+                    }}
+                    onClick={() => AddRating(id)}>
+                    +
+                  </button>
+                </div>
               </div>
             </div>
           </Row>

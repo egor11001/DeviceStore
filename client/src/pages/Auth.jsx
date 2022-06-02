@@ -6,6 +6,9 @@ import { login, registration } from '../http/userAPI';
 import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from '../utils/consts';
 import { Context } from '../';
 
+let regExpEmail =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 const Auth = observer(() => {
   const { user } = React.useContext(Context);
   const location = useLocation();
@@ -17,10 +20,17 @@ const Auth = observer(() => {
   const click = async () => {
     try {
       let data;
+      if (!regExpEmail.test(email)) {
+        window.alert('Некорректный email !');
+      }
       if (isLogin) {
         data = await login(email, password);
       } else {
-        data = await registration(email, password);
+        if (password >= 4) {
+          data = await registration(email, password);
+        } else {
+          window.alert('Пароль должен быть больше 4 символов !');
+        }
       }
       user.setUser(data);
       user.setIsAuth(true);

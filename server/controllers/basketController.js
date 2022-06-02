@@ -20,7 +20,6 @@ class BasketController {
     }
     const decoded = await jwt.verify(token, process.env.SECRET_KEY);
     const devices = await BasketDevice.findAll({ where: { basketId: decoded.id } });
-    const basket = await Basket.findOne({ where: { userId: decoded.id } });
 
     const arr = devices.map((device) => device.deviceId);
 
@@ -29,10 +28,14 @@ class BasketController {
     for (let i = 0; i < arr.length; i++) {
       let d = await Device.findOne({ where: { id: arr[i] } });
       result.push(d);
-      tPrice += tPrice + d.price;
+      tPrice = tPrice + d.price;
     }
 
-    return res.json({ result: result, tPrice: tPrice });
+    return res.json({
+      result: result,
+      tPrice: tPrice,
+      user: { id: decoded.id, email: decoded.email },
+    });
   }
   async delete(req, res) {
     const { id, token } = req.body;

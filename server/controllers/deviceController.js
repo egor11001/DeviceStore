@@ -5,6 +5,10 @@ const ApiError = require('../error/ApiError');
 
 class DeviceController {
   async create(req, res, next) {
+    const { token } = req.query;
+    if (!token) {
+      return res.status(401).json({ message: 'Не авторизован' });
+    }
     try {
       let { name, price, brandId, typeId, info } = req.body;
       let fileName;
@@ -111,12 +115,18 @@ class DeviceController {
     });
     return res.json(device);
   }
+
   async setRating(req, res) {
     const { id } = req.params;
+    let updatedDevice = {};
     const device = await Device.findOne({ where: { id: id } });
-    const incrementDevice = await device.increment('rating');
+    if (req.body.value === 1) {
+      updatedDevice = await device.increment('rating');
+    } else {
+      updatedDevice = await device.decrement('rating');
+    }
 
-    return res.json(incrementDevice);
+    return res.json(updatedDevice);
   }
 }
 

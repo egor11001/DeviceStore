@@ -3,6 +3,8 @@ import Basket from './pages/Basket';
 import Shop from './pages/Shop';
 import Auth from './pages/Auth';
 import DevicePage from './pages/DevicePage';
+import OrderCreate from './pages/OrderCreate';
+import OrderPage from './pages/OrderPage';
 import {
   ADMIN_ROUTE,
   BASKET_ROUTE,
@@ -10,6 +12,7 @@ import {
   LOGIN_ROUTE,
   REGISTRATION_ROUTE,
   SHOP_ROUTE,
+  ORDER_ROUTE,
 } from './utils/consts';
 
 export const authRoutes = [
@@ -20,6 +23,14 @@ export const authRoutes = [
   {
     path: BASKET_ROUTE,
     Component: Basket,
+  },
+  {
+    path: ORDER_ROUTE,
+    Component: OrderCreate,
+  },
+  {
+    path: ORDER_ROUTE + '/:id',
+    Component: OrderPage,
   },
 ];
 

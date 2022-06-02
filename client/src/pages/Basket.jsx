@@ -1,19 +1,26 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { Container, NavDropdown, Image, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { deleteBasket, fetchBasket } from '../http/deviceAPI';
+import { ORDER_ROUTE } from '../utils/consts';
 
 const Basket = observer(() => {
   const sortItems = ['Без сортировки', 'По возрастанию', 'По убыванию'];
   const [sort, setSort] = React.useState(sortItems[0]);
   const [devices, setDevices] = React.useState(null);
   const [tPrice, setTPrice] = React.useState(0);
+  const [forOrder, setForOrder] = React.useState(null);
+
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     const token = localStorage.getItem('token');
     fetchBasket(token).then((data) => {
+      setForOrder({ devices: data.result, user: data.user, total_price: data.tPrice });
       setDevices(data.result);
       setTPrice(data.tPrice);
+      console.log(data);
     });
   }, []);
 
@@ -103,7 +110,11 @@ const Basket = observer(() => {
         <h3 style={{ marginBottom: 0, marginLeft: 15, fontSize: 24, fontWeight: 600 }}>
           {tPrice} ₽
         </h3>
-        <Button className="ms-auto" size={'lg'} variant={'success'}>
+        <Button
+          onClick={() => navigate(ORDER_ROUTE, { state: forOrder })}
+          className="ms-auto"
+          size={'lg'}
+          variant={'success'}>
           Перейти к оформлению
         </Button>
       </Container>

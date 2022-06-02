@@ -55,8 +55,8 @@ export const fetchOneDevices = async (id) => {
   return data;
 };
 
-export const setDeviceRating = async (id) => {
-  const { data } = await $host.post('api/device/' + id);
+export const setDeviceRating = async (info) => {
+  const { data } = await $host.post('api/device/' + info.id, info);
   return data;
 };
 
@@ -77,5 +77,15 @@ export const deleteBasket = async (info) => {
 
 export const updateDevice = async (info) => {
   const { data } = await $authHost.post('api/device/update', info);
+  return data;
+};
+
+export const createOrder = async (info) => {
+  const { data } = await $host.post('api/order/create', info);
+  return data;
+};
+
+export const getOrder = async (id) => {
+  const { data } = await $host.get('api/order/' + id);
   return data;
 };
