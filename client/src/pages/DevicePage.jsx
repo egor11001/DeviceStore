@@ -26,7 +26,11 @@ const DevicePage = () => {
 
   const setBasket = (id) => {
     const token = localStorage.getItem('token');
-    updateBasket({ id: id, token: token }).then((data) => setShow(true));
+    if (token) {
+      updateBasket({ id: id, token: token }).then((data) => setShow(true));
+    } else {
+      window.alert('Авторизируйтесь !');
+    }
   };
 
   const handleClose = () => setShow(false);
